@@ -1,0 +1,83 @@
+.content {
+    color: black;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: beige;
+    width: 100vw;
+    height: 100vh;
+    gap: 20px;
+}
+
+.content h1 {
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 700;
+}
+
+.content img {
+    width: 400px;
+    height: 400px;
+    object-fit: cover;
+    border: 2px solid black;
+    border-radius: 10%;
+}
+
+img.heart-icon {
+    width: 25px;
+    height: 25px;
+    border: 0;
+    border-radius: 0;
+}
+
+.content .button-section {
+    display: flex;
+    justify-content: center;
+    width: 50%;
+    gap: 30px;
+}
+
+.content .button-section Button{
+    min-width: 100px;
+    height: 50px;
+    font-size: 24px;
+    font-weight: 500;
+}
+
+.ttt-board img {
+    border: 0;
+    border-radius: 0;
+}
+
+.ttt-board .ttt-square {
+    width: 100px;
+    height: 100px;
+    background-color: transparent;
+    border: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ttt-board .board-row{
+    display: flex;
+}
+
+.ttt-board .ttt-square h1 {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    color: black;
+    text-align: center;
+    padding-top: 15px;
+    font-size: 48px;
+    font-weight: 750;
+}
+
+.game-winner{
+    height: 50px;
+    font-size: 32px;
+    font-weight: 500;
+    color: rgb(100, 100, 100);
+}
