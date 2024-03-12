@@ -17,7 +17,6 @@ function App() {
     if (stage < totalViews) {
       setStage(stage + 1);
     }
-    console.log(stage)
   };
 
   const confirmStage = () => {
@@ -27,13 +26,13 @@ function App() {
   const seleccionarVista = () => {
     switch(stage) {
       case 0:
-        return <FirstInvitation nextStage={nextStage} confirmStage={confirmStage} />;
+        return <TicTacToe nextStage={nextStage} confirmStage={confirmStage} />;
         case 1:
           return <Sure nextStage={nextStage} confirmStage={confirmStage} />;
           case 2:
             return <Expand nextStage={nextStage} confirmStage={confirmStage} />;
             case 3:
-              return <TicTacToe nextStage={nextStage} confirmStage={confirmStage} />;
+              return <FirstInvitation nextStage={nextStage} confirmStage={confirmStage} />;
               case totalViews:
                 return <Confirmation/>;
       default:

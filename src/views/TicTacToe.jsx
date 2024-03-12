@@ -11,38 +11,133 @@ function Square({value, onClick})
     )
 }
 
+
+
+
+
+
+
+
+
+
 function TicTacToeGame(props) {
     const [squares, setSquares] = useState(Array(9).fill(null))
-    const [isX, setIsX] = useState(true)
+    const [isPlayerTurn, setIsPlayerTurn] = useState(true)
+    const [playerStarted, setPlayerStarted] = useState(true)
 
+    function botMove() {
+        //Este es el codigo para un movimiento aleatorio del bot
+        // const posible_moves = []
+        // for (let i = 0; i < squares.length; i++) {
+        //     if (squares[i] == null){
+        //         posible_moves.push(i)
+        //     }
+        // }
+        // let selected_move = posible_moves[Math.floor(Math.random() * posible_moves.length)]
+
+        //Implementacion de minimax
+        console.log("Turno del bot")
+        let best_move_score = -Infinity
+        let selected_move = -1
+        let all_scores = []
+        for (let i = 0; i < 9; i++) {
+            if (squares[i] == null) {
+                let copy_squares = squares.slice()
+                copy_squares[i] = "O"
+                let score_position = minimax(copy_squares, 100, false)
+                if (score_position > best_move_score) {
+                    console.log("Ahora la mejor posicion es ", i)
+                    best_move_score = score_position
+                    selected_move = i
+                }
+                all_scores.push(score_position)
+            } else {
+                all_scores.push(null)
+            }
+        }
+        
+        const newSquares = squares.slice();
+        newSquares[selected_move] = 'O'
+        setIsPlayerTurn(true)
+        setSquares(newSquares)
+        console.log("Se termina el turno: ", all_scores)
+    }
+
+    const state_values = {
+        X: -10,
+        O: 10,
+        tie: 0
+    }
+
+    function minimax(position, maximizingPlayer) {
+        const winner = calculateWinner(squares);
+        if (winner !== null) {
+            console.log("TERMINA EL CICLO DE ESTE MODULO")
+            return (state_values[winner]);
+        }
+
+        if (maximizingPlayer) {
+            let maxEval = -Infinity
+            for(let i = 0; i < 9; i++){
+                if (position[i] == null) {
+                    let copy_board = position.slice()
+                    copy_board[i] = "O"
+                    let score = minimax(copy_board, false)
+                    maxEval = Math.max(maxEval, score)
+                }
+            }
+            return maxEval
+        } else {
+            let minEval = +Infinity
+            for(let i = 0; i < 9; i++) {
+                if (position[i] == null) {
+                    let copy_board = position.slice()
+                    copy_board[i] = "X"
+                    let score = minimax(copy_board, true)
+                    minEval = Math.min(minEval, score)
+                }
+            }
+            return minEval
+        }
+    }
+    
     const handleClick = (i) => {
-        if (calculateWinner(squares) || squares[i]) {
+        if (calculateWinner(squares) || squares[i] || !isPlayerTurn) {
             return
         }
         const newSquares = squares.slice();
-        newSquares[i] = isX ? 'X' : "O"
+        newSquares[i] = 'X'
+        setIsPlayerTurn(false)
         setSquares(newSquares)
-        setIsX(!isX)
+        
     }
-
+    
     useEffect(() => {
         const winner = calculateWinner(squares);
-        const isBoardFull = squares.every(square => square !== null);
-        if (winner || isBoardFull) {
-            const timer = setTimeout(() => {
+        let restartTimer, botTimer;
+        if (winner) {
+            restartTimer = setTimeout(() => {
                 handleRestart();
             }, 500);
-            return () => clearTimeout(timer);
         }
+        if (!isPlayerTurn && winner == null) {
+            botTimer = setTimeout(() => {
+                botMove();
+            }, 200);
+        }
+        return (() => {
+            if (restartTimer) clearTimeout(restartTimer)
+            if (botTimer) clearTimeout(botTimer)
+        })
     }, [squares]);
-
+    
     const backgroundStyle = {
         backgroundImage: `url(${TicTacToeGrid})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat'
     }
-
+    
     function calculateWinner(squares) {
         const winningPatterns = [
             [0,1,2],
@@ -54,24 +149,28 @@ function TicTacToeGame(props) {
             [0,4,8],
             [1,4,6]
         ]
-
+        
         for (let i = 0; i<winningPatterns.length; i++){
             const [a,b,c] = winningPatterns[i]
-
+            
             if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-                props.handleWinner(`Ha ganado ${squares[a]}`)
+                //props.handleWinner(`Ha ganado ${squares[a]}`)
                 return squares[a]
             }
         }
 
+        if (squares.every(square => square !== null)) {
+            return "tie"
+        }
         return null
     }
-
+    
     function handleRestart() {
-        setIsX(true)
         setSquares(Array(9).fill(null))
+        setPlayerStarted(!playerStarted)
+        setIsPlayerTurn(!playerStarted)
     }
-
+    
     return(
         <div className='ttt-board' style={backgroundStyle}>
             <div className='board-row'>
@@ -92,6 +191,15 @@ function TicTacToeGame(props) {
         </div>
     )
 }
+
+
+
+
+
+
+
+
+
 
 function TicTacToe(props) {
     const [winner, setWinner] = useState(null)
